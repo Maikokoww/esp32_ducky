@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32 Control</title>
+  
+  <style>
+    * {
+      margin: 0;
+    }
+
+    #retour {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 4vh;
+    }
+
+    #button {
+      gap: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    #user_control {
+      width: 90vw;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+
+    #user_control input{
+      width: 100%;
+      height:7vh;
+      font-size: 3vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    #user_control button {
+      width: 25vw;
+      height: auto;
+      font-size: 3vh;
+    }
+
+    button {
+      width: 90vw;
+      height: 7vh;
+      font-size: 3vh;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+    }
+  </style>
+
+</head>
+<body>
+  
+  <h1 id="retour">Program Paused</h1>
+  <br>
+  <div id="button">
+    <div id="user_control">
+      <input type="text" id="text_input" value=""/>
+      <button onclick="user_type()">TYPE</button>
+    </div>
+    <button onclick="resume()">Continuer</button>
+    <button onclick="press_enter()">Press ENTER</button>
+    <button onclick="open_pwsh()">Open POWERSHELL</button>
+    <button onclick="run_script()">Run Script.ps1</button>
+    <button onclick="type_script()">Type Script.ps1</button>
+  </div>
+
+  <script>
+    function resume() {
+      fetch('/continue')
+        .then(() => {document.getElementById("retour").textContent="CONTINUING"});
+    }
+    function press_enter() {
+      fetch('/enter')
+        .then(() => {document.getElementById("retour").textContent="ENTER PRESSED"});
+    }
+    function open_pwsh() {
+      fetch('/open_pwsh')
+        .then(() => {document.getElementById("retour").textContent="POWERSHELL OPENED"});
+    }
+    function run_script() {
+      fetch('/script')
+        .then(() => {document.getElementById("retour").textContent="Script.ps1 RUN"});
+    }
+    function type_script() {
+      fetch('/type_script')
+        .then(() => {document.getElementById("retour").textContent="Wrote Sript.ps1"});
+    }
+
+    function user_type() {
+    const text = document.getElementById("text_input").value;
+    fetch('/type?text=' + encodeURIComponent(text))
+      .then(() => {
+        document.getElementById("retour").textContent = "TYPED: " + text;
+      });
+  }
+  </script>
+
+</body>
+</html>
