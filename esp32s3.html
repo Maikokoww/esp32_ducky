@@ -70,6 +70,9 @@
     <button onclick="open_pwsh()">Open POWERSHELL</button>
     <button onclick="run_script()">Run Script.ps1</button>
     <button onclick="type_script()">Type Script.ps1</button>
+    <button onclick="alt_f4()">ALT F4</button>
+    <button onclick="shutdown()">SHUTDOWN</button>
+  </div>
   </div>
 
   <script>
@@ -89,6 +92,10 @@
       fetch('/script')
         .then(() => {document.getElementById("retour").textContent="Script.ps1 RUN"});
     }
+        function shutdown() {
+      fetch('/shutdown')
+        .then(() => {document.getElementById("retour").textContent="SHUTDOWN"});
+    }
     function type_script() {
       fetch('/type_script')
         .then(() => {document.getElementById("retour").textContent="Wrote Sript.ps1"});
@@ -101,6 +108,11 @@
         document.getElementById("retour").textContent = "TYPED: " + text;
       });
   }
+
+    function alt_f4() {
+      fetch('/altf4')
+        .then(() => {document.getElementById("retour").textContent="ALT F4 RUN"});
+    }
   </script>
 
 </body>
